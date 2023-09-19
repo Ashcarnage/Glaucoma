@@ -18,7 +18,7 @@ hyper_pam["flat_patches_shape"] = (hyper_pam["num_patches"], hyper_pam["patch_si
 
 hyper_pam["batch_size"] = 5
 hyper_pam["lr"] = 1e-4
-hyper_pam["num_epochs"] = 40
+hyper_pam["num_epochs"] = 60
 hyper_pam['num_classes'] = 2
 hyper_pam["class_names"] = ["GLAUCOMA","NORMAL"]
 
