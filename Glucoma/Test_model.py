@@ -17,8 +17,8 @@ hyper_pam ["num_patches"] = (hyper_pam["image_size"]**2) // (hyper_pam["patch_si
 hyper_pam["flat_patches_shape"] = (hyper_pam["num_patches"], hyper_pam["patch_size"]*hyper_pam["patch_size"]*hyper_pam["num_channels"])
 
 hyper_pam["batch_size"] = 5
-hyper_pam["lr"] = 1e-4
-hyper_pam["num_epochs"] = 60
+hyper_pam["lr"] = 7e-8
+hyper_pam["num_epochs"] = 10
 hyper_pam['num_classes'] = 2
 hyper_pam["class_names"] = ["GLAUCOMA","NORMAL"]
 
@@ -42,10 +42,19 @@ if __name__ == "__main__":
     ''' dataset '''
     train_x,valid_x,test_x = load_data(datapath)
     test_ds = f_dataset(train_x,batch = hyper_pam["batch_size"])
+    valid_ds = f_dataset(valid_x,batch = hyper_pam["batch_size"])
 
     ''' MODEL '''
     model = tf.keras.models.load_model('transformer_model')
-    model.compile(loss = "categorical_crossentropy",optimizer = tf.keras.optimizers.Adam(hyper_pam["lr"],clipvalue=1.0),metrics = ["acc"])
-    model.evaluate(test_ds)
+    model.compile(loss = "categorical_crossentropy",optimizer = tf.keras.optimizers.Adam(hyper_pam["lr"],clipvalue=1.5),metrics = ["acc"])
+    #model.evaluate(test_ds)
+    try:
+        model.fit(test_ds,epochs = hyper_pam["num_epochs"],validation_data=valid_ds)
+    except KeyboardInterrupt:
+        model.save("transformer_model")
+        print("model saved !")
+    else:
+        model.save("transformer_model")
+        print("model saved ...")
 
 
